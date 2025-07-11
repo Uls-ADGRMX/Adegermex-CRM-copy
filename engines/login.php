@@ -1,0 +1,36 @@
+<?php
+///////////////////////////////////////////////////////
+// Conexión a la Base de Datos ////////////////////////
+///////////////////////////////////////////////////////
+include '../scripts/conexion.php';
+///////////////////////////////////////////////////////
+// Credenciales del usuario ///////////////////////////
+///////////////////////////////////////////////////////
+$usuario = $_POST['usuario']; 
+$password = $_POST['password'];
+///////////////////////////////////////////////////////
+// Validación de credenciales /////////////////////////
+///////////////////////////////////////////////////////
+$log = "SELECT * FROM tcusuarios WHERE usuario='$usuario' AND password='$password' AND status='Activo'";
+$login=mysql_query($log, $conexion) or die(mysql_error());
+if (mysql_num_rows($login)==0){
+echo '<script language="javascript">alert("Cation : Inicio de Sesión\n\nEl usuario o la contraseña ingresados son incorrectos.\n\nVerifique los datos y vuelva a intentarlo.")</script>';
+echo "<script language='javascript'>window.location='../index.php'</script>";
+	die();
+	exit();
+}
+else
+{
+///////////////////////////////////////////////////////
+// ID del usuario entrante ////////////////////////////
+///////////////////////////////////////////////////////
+$arrayusuario = mysql_fetch_object($login);
+$id_usuario = $arrayusuario->id_usuario;
+///////////////////////////////////////////////////////
+// Inicio de sesión con el ID del usuario /////////////
+///////////////////////////////////////////////////////
+session_start();
+$_SESSION['id_usuario'] = $id_usuario;
+header('Location: ../login.php');
+}
+?>
